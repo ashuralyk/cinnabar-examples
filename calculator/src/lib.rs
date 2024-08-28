@@ -29,7 +29,8 @@ pub fn build_purchase_blind_box<T: RPC>(
     buyer: ScriptEx,
     blind_box_server: ScriptEx,
 ) -> eyre::Result<Instruction<T>> {
-    let deployment = load_contract_deployment(network, BLIND_BOX_NAME, "../deployment", None)?;
+    let deployment =
+        load_contract_deployment(&network.parse()?, BLIND_BOX_NAME, "../deployment", None)?;
     let purchase = Instruction::<T>::new(vec![
         Box::new(AddBlindBoxCelldep { deployment }),
         Box::new(AddBlindBoxOutputCell {
@@ -60,7 +61,8 @@ pub fn build_open_blind_box<T: RPC>(
     network: &str,
     blind_box_server: ScriptEx,
 ) -> eyre::Result<Instruction<T>> {
-    let deployment = load_contract_deployment(network, BLIND_BOX_NAME, "../deployment", None)?;
+    let deployment =
+        load_contract_deployment(&network.parse()?, BLIND_BOX_NAME, "../deployment", None)?;
     let open = Instruction::<T>::new(vec![
         Box::new(AddBlindBoxCelldep { deployment }),
         Box::new(AddBlindBoxPurchaseInputCell {

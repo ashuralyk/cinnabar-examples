@@ -1,6 +1,6 @@
 use ckb_cinnabar::{
     calculator::{
-        operation::{AddCellDep, AddInputCell, AddOutputCell, Operation},
+        operation::{AddCellDep, AddInputCell, AddOutputCell, Log, Operation},
         re_exports::{
             async_trait,
             ckb_sdk::rpc::ckb_indexer::SearchMode,
@@ -23,7 +23,12 @@ pub struct AddBlindBoxCelldep {
 
 #[async_trait::async_trait]
 impl<T: RPC> Operation<T> for AddBlindBoxCelldep {
-    async fn run(self: Box<Self>, rpc: &T, skeleton: &mut TransactionSkeleton) -> eyre::Result<()> {
+    async fn run(
+        self: Box<Self>,
+        rpc: &T,
+        skeleton: &mut TransactionSkeleton,
+        log: &mut Log,
+    ) -> eyre::Result<()> {
         if let Some(deployment) = self.deployment {
             Box::new(AddCellDep {
                 name: BLIND_BOX_NAME.to_string(),
@@ -39,7 +44,7 @@ impl<T: RPC> Operation<T> for AddBlindBoxCelldep {
                 with_data: true,
                 dep_type: DepType::Code,
             })
-            .run(rpc, skeleton)
+            .run(rpc, skeleton, log)
             .await
         } else {
             Box::new(AddFakeContractCelldepByName {
@@ -47,7 +52,7 @@ impl<T: RPC> Operation<T> for AddBlindBoxCelldep {
                 with_type_id: true,
                 contract_binary_path: "../build/release".to_string(),
             })
-            .run(rpc, skeleton)
+            .run(rpc, skeleton, log)
             .await
         }
     }
@@ -62,7 +67,12 @@ pub struct AddBlindBoxOutputCell {
 
 #[async_trait::async_trait]
 impl<T: RPC> Operation<T> for AddBlindBoxOutputCell {
-    async fn run(self: Box<Self>, rpc: &T, skeleton: &mut TransactionSkeleton) -> eyre::Result<()> {
+    async fn run(
+        self: Box<Self>,
+        rpc: &T,
+        skeleton: &mut TransactionSkeleton,
+        log: &mut Log,
+    ) -> eyre::Result<()> {
         let buyer_lock_script = self.buyer.to_script(skeleton)?;
         let args = [
             vec![self.purchase_count],
@@ -79,7 +89,7 @@ impl<T: RPC> Operation<T> for AddBlindBoxOutputCell {
             absolute_capacity: true,
             type_id: false,
         })
-        .run(rpc, skeleton)
+        .run(rpc, skeleton, log)
         .await
     }
 }
@@ -91,7 +101,12 @@ pub struct AddBlindBoxPurchaseInputCell {
 
 #[async_trait::async_trait]
 impl<T: RPC> Operation<T> for AddBlindBoxPurchaseInputCell {
-    async fn run(self: Box<Self>, rpc: &T, skeleton: &mut TransactionSkeleton) -> eyre::Result<()> {
+    async fn run(
+        self: Box<Self>,
+        rpc: &T,
+        skeleton: &mut TransactionSkeleton,
+        log: &mut Log,
+    ) -> eyre::Result<()> {
         // In fake mode, we just create a fake purchase cell of always-success for test
         if rpc.network() == Network::Fake {
             let buyer =
@@ -122,7 +137,7 @@ impl<T: RPC> Operation<T> for AddBlindBoxPurchaseInputCell {
                 count: 1,
                 search_mode: SearchMode::Prefix,
             })
-            .run(rpc, skeleton)
+            .run(rpc, skeleton, log)
             .await
         }
     }
@@ -141,7 +156,12 @@ impl<T: RPC> Operation<T> for AddBlindBoxOutputCells {
     // 1. Find purchase cell that already inserted by previous `AddInputCell` operation
     // 2. Get the purchase count from purchase cell
     // 3. Build series output cells according to the purchase count
-    async fn run(self: Box<Self>, _: &T, skeleton: &mut TransactionSkeleton) -> eyre::Result<()> {
+    async fn run(
+        self: Box<Self>,
+        _: &T,
+        skeleton: &mut TransactionSkeleton,
+        _: &mut Log,
+    ) -> eyre::Result<()> {
         let purchase_cell = if self.purchase_cell_index == usize::MAX {
             skeleton
                 .inputs

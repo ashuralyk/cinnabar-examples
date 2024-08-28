@@ -29,7 +29,7 @@ async fn main() {
 
     // Apply instructions
     let rpc = RpcClient::new_testnet();
-    let skeleton = TransactionCalculator::new(vec![prepare, open, remain])
+    let (skeleton, _) = TransactionCalculator::new(vec![prepare, open, remain])
         .new_skeleton(&rpc)
         .await
         .expect("create skeleton");

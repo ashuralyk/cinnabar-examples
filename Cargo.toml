@@ -11,8 +11,8 @@ members = [
 ]
 
 [workspace.dependencies]
-ckb-cinnabar = { git = "https://github.com/ashuralyk/ckb-cinnabar", rev = "821c433" }
-ckb-cinnabar-verifier = { git = "https://github.com/ashuralyk/ckb-cinnabar", rev = "821c433" }
+ckb-cinnabar = { git = "https://github.com/ashuralyk/ckb-cinnabar" }
+ckb-cinnabar-verifier = { git = "https://github.com/ashuralyk/ckb-cinnabar" }
 
 [package]
 name = "runner"

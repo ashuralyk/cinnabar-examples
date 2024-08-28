@@ -68,5 +68,19 @@
     "contract_owner_address": "ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsq28phxutezqvjgfv5q38gn5kwek4m9km3cmajeqs",
     "type_id": null,
     "__comment": null
+  },
+  {
+    "name": "blind-box-type",
+    "date": "2024-08-22T07:34:23.177565+00:00",
+    "operation": "migrate",
+    "version": "v0.1.5",
+    "tx_hash": "0xd09dc5d59e3906ff67bbb57d7cbc6727dbe398538b15c4f06f5b136f81c95a9a",
+    "out_index": 0,
+    "data_hash": "0x29160292b4f51de7d7288d5bf9cf9a903fc158310528a51004dcd5b4c17abe74",
+    "occupied_capacity": 3876600000000,
+    "payer_address": "ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsq28phxutezqvjgfv5q38gn5kwek4m9km3cmajeqs",
+    "contract_owner_address": "ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsq28phxutezqvjgfv5q38gn5kwek4m9km3cmajeqs",
+    "type_id": "0xe3266f3ccbc9ea1193470a6f5f89065add579543ac40b64a0d378f673c4eeb74",
+    "__comment": null
   }
 ]

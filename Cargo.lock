@@ -349,7 +349,7 @@ dependencies = [
 [[package]]
 name = "ckb-cinnabar"
 version = "0.1.0"
-source = "git+https://github.com/ashuralyk/ckb-cinnabar?rev=821c433#821c43351c9a273186e8586b4dce7275a86771fb"
+source = "git+https://github.com/ashuralyk/ckb-cinnabar#29fe60f7febdf05ac4ed839b2d09c44fa26e956f"
 dependencies = [
  "chrono",
  "ckb-cinnabar-calculator",
@@ -364,7 +364,7 @@ dependencies = [
 [[package]]
 name = "ckb-cinnabar-calculator"
 version = "0.1.0"
-source = "git+https://github.com/ashuralyk/ckb-cinnabar?rev=821c433#821c43351c9a273186e8586b4dce7275a86771fb"
+source = "git+https://github.com/ashuralyk/ckb-cinnabar#29fe60f7febdf05ac4ed839b2d09c44fa26e956f"
 dependencies = [
  "async-trait",
  "ckb-always-success-script",
@@ -379,6 +379,7 @@ dependencies = [
  "futures",
  "hex",
  "jsonrpc-core",
+ "molecule 0.8.0",
  "rand 0.8.5",
  "reqwest 0.12.5",
  "rpassword",
@@ -391,7 +392,7 @@ dependencies = [
 [[package]]
 name = "ckb-cinnabar-verifier"
 version = "0.1.0"
-source = "git+https://github.com/ashuralyk/ckb-cinnabar?rev=821c433#821c43351c9a273186e8586b4dce7275a86771fb"
+source = "git+https://github.com/ashuralyk/ckb-cinnabar#29fe60f7febdf05ac4ed839b2d09c44fa26e956f"
 dependencies = [
  "ckb-std",
 ]
