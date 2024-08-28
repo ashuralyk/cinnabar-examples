@@ -1,3 +1,4 @@
-# ckb-cinnabar-scripts-template
+# Cinnabar Exmaples
 
-TODO
+example list:
+- [x] blind-box
