@@ -7,12 +7,15 @@ members = [
   # @@INSERTION_POINT@@
   "calculator",
   "tests",
-  "contracts/blind-box-type",
+  "contracts/dao-certificate-type",
+  "contracts/dao-certificate-check-lock",
 ]
 
 [workspace.dependencies]
-ckb-cinnabar = { git = "https://github.com/ashuralyk/ckb-cinnabar" }
-ckb-cinnabar-verifier = { git = "https://github.com/ashuralyk/ckb-cinnabar" }
+# ckb-cinnabar = { git = "https://github.com/ashuralyk/ckb-cinnabar" }
+# ckb-cinnabar-verifier = { git = "https://github.com/ashuralyk/ckb-cinnabar" }
+ckb-cinnabar = { path = "../cinnabar" }
+ckb-cinnabar-verifier = { path = "../cinnabar/verify" }
 
 [package]
 name = "runner"

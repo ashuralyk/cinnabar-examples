@@ -1,5 +1,5 @@
 [package]
-name = "blind-box-type"
+name = "dao-certificate-check-lock"
 version = "0.1.0"
 edition = "2021"
 
@@ -7,3 +7,9 @@ edition = "2021"
 ckb-std = "0.15.3"
 
 ckb-cinnabar-verifier = { workspace = true }
+
+[features]
+default = ["mainnet"]
+mainnet = []
+testnet = []
+unitest = []
