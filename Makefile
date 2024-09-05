@@ -10,7 +10,7 @@ CUSTOM_RUSTFLAGS := --cfg debug_assertions
 # Additional cargo args to append here. For example, one can use
 # make test CARGO_ARGS="-- --nocapture" so as to inspect data emitted to
 # stdout in unit tests
-CARGO_ARGS :=
+CARGO_ARGS := $(CARGO_ARGS)
 MODE := release
 # Tweak this to change the clang version to use for building C code. By default
 # we use a bash script with somes heuristics to find clang in current system.

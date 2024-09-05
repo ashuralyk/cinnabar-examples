@@ -2,6 +2,7 @@ use ckb_cinnabar::{
     calculator::{
         re_exports::eyre::{eyre, Result},
         rpc::Network,
+        simulation::random_hash,
     },
     load_contract_deployment, DeploymentRecord,
 };
@@ -45,11 +46,26 @@ lazy_static! {
         .expect("dao-certificate-check deployment not found");
 }
 
+lazy_static! {
+    pub static ref FAKENET_DAO_CERTIFICATE_DEPLOYMENT: DeploymentRecord = DeploymentRecord {
+        name: DAO_CERTIFICATE_NAME.to_string(),
+        tx_hash: random_hash().into(),
+        out_index: 0,
+        ..Default::default()
+    };
+    pub static ref FAKENET_DAO_CERTIFICATE_CHECK_DEPLOYMENT: DeploymentRecord = DeploymentRecord {
+        name: DAO_CERTIFICATE_CHECK_NAME.to_string(),
+        tx_hash: random_hash().into(),
+        out_index: 0,
+        ..Default::default()
+    };
+}
+
 pub fn dao_certificate_deployment(network: Network) -> Result<&'static DeploymentRecord> {
     match network {
         Network::Mainnet => MAINNET_DAO_CERTIFICATE_DEPLOYMENT.as_ref(),
         Network::Testnet => TESTNET_DAO_CERTIFICATE_DEPLOYMENT.as_ref(),
-        _ => return Err(eyre!("only support mainnet/testnet")),
+        _ => Some(&*FAKENET_DAO_CERTIFICATE_DEPLOYMENT),
     }
     .ok_or(eyre!("dao-certificate deployment not found"))
 }
@@ -58,7 +74,7 @@ pub fn dao_certificate_check_deployment(network: Network) -> Result<&'static Dep
     match network {
         Network::Mainnet => MAINNET_DAO_CERTIFICATE_CHECK_DEPLOYMENT.as_ref(),
         Network::Testnet => TESTNET_DAO_CERTIFICATE_CHECK_DEPLOYMENT.as_ref(),
-        _ => return Err(eyre!("only support mainnet/testnet")),
+        _ => Some(&*FAKENET_DAO_CERTIFICATE_CHECK_DEPLOYMENT),
     }
     .ok_or(eyre!("dao-certificate-check deployment not found"))
 }

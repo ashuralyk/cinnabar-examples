@@ -1,10 +1,7 @@
 use ckb_cinnabar::calculator::{
     operation::{
-        basic::{AddCellDep, AddInputCell, AddOutputCell},
-        component::{
-            hardcoded::{Name, TYPE_BURN_CODE_HASH},
-            AddComponentCelldep, AddTypeBurnOutputCell,
-        },
+        basic::{AddCellDep, AddHeaderDepByInputIndex, AddInputCell, AddOutputCell},
+        component::{hardcoded::TYPE_BURN_CODE_HASH, AddTypeBurnOutputCell},
         dao::AddDaoDepositOutputCell,
         spore::{AddSporeOutputCell, ClusterAuthorityMode},
         Log, Operation,
@@ -15,8 +12,7 @@ use ckb_cinnabar::calculator::{
         ckb_types::{core::DepType, prelude::Unpack, H256},
         eyre,
     },
-    rpc::{Network, RPC},
-    simulation::{AddFakeContractCelldepByName, AddFakeInputCell},
+    rpc::RPC,
     skeleton::{HeaderDepEx, ScriptEx, TransactionSkeleton},
 };
 
@@ -33,29 +29,16 @@ impl<T: RPC> Operation<T> for AddDaoCertificateCelldep {
         skeleton: &mut TransactionSkeleton,
         log: &mut Log,
     ) -> eyre::Result<()> {
-        match rpc.network() {
-            Network::Mainnet | Network::Testnet => {
-                let deployment = config::dao_certificate_deployment(rpc.network())?;
-                Box::new(AddCellDep {
-                    name: config::DAO_CERTIFICATE_NAME.to_string(),
-                    tx_hash: deployment.tx_hash.clone(),
-                    index: deployment.out_index,
-                    with_data: false,
-                    dep_type: DepType::Code,
-                })
-                .run(rpc, skeleton, log)
-                .await
-            }
-            _ => {
-                Box::new(AddFakeContractCelldepByName {
-                    contract: config::DAO_CERTIFICATE_NAME.to_string(),
-                    with_type_id: true,
-                    contract_binary_path: "../build/release".to_string(),
-                })
-                .run(rpc, skeleton, log)
-                .await
-            }
-        }
+        let deployment = config::dao_certificate_deployment(rpc.network())?;
+        Box::new(AddCellDep {
+            name: config::DAO_CERTIFICATE_NAME.to_string(),
+            tx_hash: deployment.tx_hash.clone(),
+            index: deployment.out_index,
+            with_data: false,
+            dep_type: DepType::Code,
+        })
+        .run(rpc, skeleton, log)
+        .await
     }
 }
 
@@ -70,29 +53,16 @@ impl<T: RPC> Operation<T> for AddDaoCertificateCheckCelldep {
         skeleton: &mut TransactionSkeleton,
         log: &mut Log,
     ) -> eyre::Result<()> {
-        match rpc.network() {
-            Network::Mainnet | Network::Testnet => {
-                let deployment = config::dao_certificate_check_deployment(rpc.network())?;
-                Box::new(AddCellDep {
-                    name: config::DAO_CERTIFICATE_CHECK_NAME.to_string(),
-                    tx_hash: deployment.tx_hash.clone(),
-                    index: deployment.out_index,
-                    with_data: false,
-                    dep_type: DepType::Code,
-                })
-                .run(rpc, skeleton, log)
-                .await
-            }
-            _ => {
-                Box::new(AddFakeContractCelldepByName {
-                    contract: config::DAO_CERTIFICATE_CHECK_NAME.to_string(),
-                    with_type_id: true,
-                    contract_binary_path: "../build/release".to_string(),
-                })
-                .run(rpc, skeleton, log)
-                .await
-            }
-        }
+        let deployment = config::dao_certificate_check_deployment(rpc.network())?;
+        Box::new(AddCellDep {
+            name: config::DAO_CERTIFICATE_CHECK_NAME.to_string(),
+            tx_hash: deployment.tx_hash.clone(),
+            index: deployment.out_index,
+            with_data: false,
+            dep_type: DepType::Code,
+        })
+        .run(rpc, skeleton, log)
+        .await
     }
 }
 
@@ -147,6 +117,10 @@ impl<T: RPC> Operation<T> for AddDaoCertificateOutputCellWithDaoDeposit {
     }
 }
 
+/// Add dao-certificate cell without type-burn locked
+///
+/// # Parameters
+/// - `depositer`: the lock script of the dao depositer
 pub struct AddDaoCertificateInputCell {
     pub depositer: ScriptEx,
 }
@@ -171,68 +145,22 @@ impl<T: RPC> Operation<T> for AddDaoCertificateInputCell {
             search_mode: SearchMode::Prefix,
         })
         .run(rpc, skeleton, log)
+        .await?;
+        Box::new(AddHeaderDepByInputIndex {
+            input_index: usize::MAX,
+        })
+        .run(rpc, skeleton, log)
         .await
     }
 }
 
-pub struct AddDaoCertificateTypeBurnInputCell {
-    pub input_index: usize,
-}
-
-#[async_trait::async_trait]
-impl<T: RPC> Operation<T> for AddDaoCertificateTypeBurnInputCell {
-    async fn run(
-        self: Box<Self>,
-        rpc: &T,
-        skeleton: &mut TransactionSkeleton,
-        log: &mut Log,
-    ) -> eyre::Result<()> {
-        Box::new(AddDaoCertificateCelldep {})
-            .run(rpc, skeleton, log)
-            .await?;
-        Box::new(AddComponentCelldep {
-            name: Name::TypeBurn,
-        })
-        .run(rpc, skeleton, log)
-        .await?;
-        let dao_certificate_cell = skeleton.get_input_by_index(self.input_index)?;
-        let type_hash = dao_certificate_cell
-            .output
-            .calc_type_hash()
-            .ok_or(eyre::eyre!("dao certificate cell should have type script"))?;
-        let type_burn_lock =
-            ScriptEx::new_code(TYPE_BURN_CODE_HASH, type_hash.as_bytes().to_owned());
-        if rpc.network() != Network::Fake {
-            let partial_type_script =
-                ScriptEx::from((config::DAO_CERTIFICATE_NAME.to_string(), vec![]));
-            Box::new(AddInputCell {
-                lock_script: type_burn_lock,
-                type_script: Some(partial_type_script),
-                count: 1,
-                search_mode: SearchMode::Prefix,
-            })
-            .run(rpc, skeleton, log)
-            .await
-        } else {
-            let dao_certificate_type =
-                ScriptEx::from((config::DAO_CERTIFICATE_NAME.to_string(), vec![1u8; 32]))
-                    .to_script(skeleton)?;
-            let dao_capacity = 0u64.to_le_bytes().to_vec();
-            Box::new(AddFakeInputCell {
-                lock_script: type_burn_lock.into(),
-                type_script: Some(dao_certificate_type.into()),
-                data: dao_capacity,
-                capacity: 0,
-                absolute_capacity: false,
-            })
-            .run(rpc, skeleton, log)
-            .await
-        }
-    }
-}
-
+/// Add dao-certificate and spore cells, in which the dao-certificate cell is locked by spore cell with type-burn
+///
+/// # Parameters
+/// - `dao_certificate_input_index`: the index of the dao-certificate cell in Inputs
+/// - `cluster_id`: the cluster id of the spore cell
 pub struct AddDaoCertificateOutputCellWithSporeTypeBurn {
-    pub certificate_index: usize,
+    pub dao_certificate_input_index: usize,
     pub cluster_id: H256,
 }
 
@@ -244,7 +172,7 @@ impl<T: RPC> Operation<T> for AddDaoCertificateOutputCellWithSporeTypeBurn {
         skeleton: &mut TransactionSkeleton,
         log: &mut Log,
     ) -> eyre::Result<()> {
-        let dao_certificate_cell = skeleton.get_input_by_index(self.certificate_index)?;
+        let dao_certificate_cell = skeleton.get_input_by_index(self.dao_certificate_input_index)?;
         let depositer = dao_certificate_cell.output.lock_script();
         let dao_deposit_header =
             HeaderDepEx::new_from_outpoint(rpc, dao_certificate_cell.input.previous_output())

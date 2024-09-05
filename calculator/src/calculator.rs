@@ -5,7 +5,7 @@ use ckb_cinnabar::calculator::{
         component::{
             AddLockProxyInputCell, AddLockProxyOutputCell, AddTypeBurnInputCellByInputIndex,
         },
-        spore::AddSporeInputCellBySporeId,
+        spore::{AddSporeActions, AddSporeInputCellBySporeId},
     },
     re_exports::{ckb_sdk::Address, ckb_types::H256},
     rpc::RPC,
@@ -60,9 +60,10 @@ pub fn spore_mint_with_certificate<T: RPC>(depositer: Address, cluster_id: H256)
             depositer: depositer.into(),
         }),
         Box::new(AddDaoCertificateOutputCellWithSporeTypeBurn {
-            certificate_index: usize::MAX,
+            dao_certificate_input_index: usize::MAX,
             cluster_id,
         }),
+        Box::new(AddSporeActions {}),
     ])
 }
 

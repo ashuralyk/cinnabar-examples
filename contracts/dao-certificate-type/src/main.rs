@@ -33,6 +33,7 @@ define_errors!(
         SporeCellNotFound,
         SporeCellNotLocked,
         InvalidSporeData,
+        NoDepositHeaderSet,
         UnexpectedSporeDataFormat,
     }
 );
@@ -201,7 +202,8 @@ impl Verification<Context> for SporeMint {
         // Check if particularly the dob content is correct
         let content = spore_data.content().raw_data();
         let dao_capacity = load_cell_data(0, GroupOutput)?;
-        let dao_certificate_header = load_header(0, GroupOutput)?;
+        let dao_certificate_header =
+            load_header(0, GroupInput).map_err(|_| ScriptError::NoDepositHeaderSet)?;
         let expected_content = {
             let mut content = dao_capacity;
             content.append(&mut dao_certificate_header.raw().number().raw_data().to_vec());
