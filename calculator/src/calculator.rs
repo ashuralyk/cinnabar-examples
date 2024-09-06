@@ -81,5 +81,6 @@ pub fn dao_withdraw_with_certificate<T: RPC>(depositer: Address, spore_id: H256)
         Box::new(AddTypeBurnInputCellByInputIndex {
             input_index: usize::MAX,
         }),
+        Box::new(AddSporeActions {}),
     ])
 }
