@@ -12,22 +12,20 @@ members = [
 ]
 
 [workspace.dependencies]
-# ckb-cinnabar = { git = "https://github.com/ashuralyk/ckb-cinnabar" }
-# ckb-cinnabar-verifier = { git = "https://github.com/ashuralyk/ckb-cinnabar" }
-ckb-cinnabar = { path = "../cinnabar" }
-ckb-cinnabar-verifier = { path = "../cinnabar/verify" }
+ckb-cinnabar = {git = "https://github.com/ashuralyk/ckb-cinnabar"}
+ckb-cinnabar-verifier = {git = "https://github.com/ashuralyk/ckb-cinnabar"}
 
 [package]
+edition = "2021"
 name = "runner"
 version = "0.1.0"
-edition = "2021"
 
 [dependencies]
-ckb-cinnabar = { workspace = true }
+ckb-cinnabar = {workspace = true}
 
 [profile.release]
+codegen-units = 1
+lto = true
+opt-level = 's'
 overflow-checks = true
 strip = true
-opt-level = 's'
-lto = true
-codegen-units = 1
