@@ -1,0 +1,30 @@
+[
+  {
+    "name": "dao-certificate-type",
+    "date": "2024-09-09T06:53:52.829394+00:00",
+    "operation": "deploy",
+    "version": "v1.0.0",
+    "tx_hash": "0x9eabcd1cefd47b1bac3d50a75b7bdd7682e63f18b6d9cb08aede9684a6af692d",
+    "out_index": 0,
+    "data_hash": "0x6e0ad4bcd48af5b4ef3d8ba81595cf3d7853d3e2fb2029dd5af9873d15b12733",
+    "occupied_capacity": 5432500000000,
+    "payer_address": "ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqfqmf4hphl9jkrw3934mwe6m3a2nx88rzgdlw820",
+    "contract_owner_address": "ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqfqmf4hphl9jkrw3934mwe6m3a2nx88rzgdlw820",
+    "type_id": null,
+    "__comment": null
+  },
+  {
+    "name": "dao-certificate-type",
+    "date": "2024-09-09T06:55:58.689220+00:00",
+    "operation": "migrate",
+    "version": "v1.0.0",
+    "tx_hash": "0x1495d92a10af088f2afbd8df6ec9a171d38bb88d6c4b0caa05b6aadc07d7cfd2",
+    "out_index": 0,
+    "data_hash": "0x6e0ad4bcd48af5b4ef3d8ba81595cf3d7853d3e2fb2029dd5af9873d15b12733",
+    "occupied_capacity": 5439000000000,
+    "payer_address": "ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqfqmf4hphl9jkrw3934mwe6m3a2nx88rzgdlw820",
+    "contract_owner_address": "ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqfqmf4hphl9jkrw3934mwe6m3a2nx88rzgdlw820",
+    "type_id": "0xd12fd50475093f29bc6594ff4bad4ad3cdcbe9666282df25bc6ca302590e073a",
+    "__comment": "just add type_id because I missed to add it in the last deployment"
+  }
+]

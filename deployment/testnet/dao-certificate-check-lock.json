@@ -1,0 +1,16 @@
+[
+  {
+    "name": "dao-certificate-check-lock",
+    "date": "2024-09-09T07:00:10.351688+00:00",
+    "operation": "deploy",
+    "version": "v1.0.0",
+    "tx_hash": "0x207780e4318ac6424c2ef26ba2c7c0201550e02d518472d67220429e00d1908d",
+    "out_index": 0,
+    "data_hash": "0x464e4dd82a74b1e3d5c249129558867802e98e7b93b34f71a857c95ebe4f238a",
+    "occupied_capacity": 3030200000000,
+    "payer_address": "ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqfqmf4hphl9jkrw3934mwe6m3a2nx88rzgdlw820",
+    "contract_owner_address": "ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqfqmf4hphl9jkrw3934mwe6m3a2nx88rzgdlw820",
+    "type_id": "0x3a941c745df994ef4f850a36cf2cca3f2bed5d6c4a01c2f98fe05a9b2ff727bf",
+    "__comment": null
+  }
+]
