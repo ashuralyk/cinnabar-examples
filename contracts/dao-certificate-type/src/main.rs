@@ -121,6 +121,9 @@ impl Verification<Context> for DaoDeposit {
 
         // The dao-certificate cell must record deposit capacity of DAO in its cell data
         let data = load_cell_data(0, GroupOutput)?;
+        if data.len() != 8 {
+            return Err(ScriptError::InvalidCertificateDataFormat.into());
+        }
         let dao_capacity = u64::from_le_bytes(
             data[..8]
                 .try_into()
